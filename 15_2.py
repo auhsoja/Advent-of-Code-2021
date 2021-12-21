@@ -12,6 +12,9 @@ def get_day(n: int):
 
 
 def bin_heap_dijkstras(times, x, y):
+    '''
+    Find shortest path from x to y using Dijkstra's Algorithm with a binary heap
+    '''
 
     graph = defaultdict(dict)
 

@@ -10,6 +10,10 @@ def get_day(n: int):
 
 
 def solve(text):
+    '''
+    Solve part 1 using Bellman-Ford. This is not fast enough for part 2. See 15_2.py for
+    an implementation using Dijkstra's that's sufficient for both parts.
+    '''
     M = len(text)
     N = len(text[0])
     costs = []
