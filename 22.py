@@ -7,26 +7,38 @@ import math
 def intersection(cube1, cube2):
     xb1, yb1, zb1 = cube1
     xb2, yb2, zb2 = cube2
-    for a, b in zip(cube1, cube2):
-        if a[0] > b[1] or a[1] < b[0]:
+    for (lo1, hi1), (lo2, hi2) in zip(cube1, cube2):
+        if lo1 > hi2 or hi1 < lo2:
             return None
 
-    return tuple((max(a[0], b[0]), min(a[1], b[1])) for a, b in zip(cube1, cube2))
+    return tuple((max(lo1, lo2), min(hi1, hi2)) for (lo1, hi1), (lo2, hi2) in zip(cube1, cube2))
 
 def difference(cube1, cube2):
     int = intersection(cube1, cube2)
     if not int:
+        # If there was no intersection, we just propagate the existing cube
         return [cube1]
 
-    # If the cube was intersected, generate the 6 resultant subcubes
+    # If the cube was intersected, generate the 6 resultant subcubes from the difference
     new_cubes = []
-    new_cubes.append((cube1[0], cube1[1], (cube1[2][0], int[2][0] - 1)))
-    new_cubes.append((cube1[0], cube1[1], (int[2][1] + 1, cube1[2][1])))
-    new_cubes.append(((cube1[0][0], int[0][0] - 1), cube1[1], int[2]))
-    new_cubes.append(((int[0][1] + 1, cube1[0][1]), cube1[1], int[2]))
-    new_cubes.append((int[0], (cube1[1][0], int[1][0] - 1), int[2]))
-    new_cubes.append((int[0], (int[1][1] + 1, cube1[1][1]), int[2]))
+    xb1, yb1, zb1 = cube1
+    xb2, yb2, zb2 = int
 
+    # The subcube below the intersection in z
+    new_cubes.append((xb1, yb1, (zb1[0], zb2[0] - 1)))
+
+    # The subcube above the intersection in z
+    new_cubes.append((xb1, yb1, (zb2[1] + 1, zb1[1])))
+
+    # Etc (Note that we fix the z range to the intersection now)
+    new_cubes.append(((xb1[0], xb2[0] - 1), yb1, zb2))
+    new_cubes.append(((xb2[1] + 1, xb1[1]), yb1, zb2))
+
+
+    new_cubes.append((xb2, (yb1[0], yb2[0] - 1), zb2))
+    new_cubes.append((xb2, (yb2[1] + 1, yb1[1]), zb2))
+
+    # 3 of the choices should probably wrong since they're on the flat part
     return [(x, y, z) for x, y, z in new_cubes if x[0] <= x[1] and y[0] <= y[1] and z[0] <= z[1]]
 
 
