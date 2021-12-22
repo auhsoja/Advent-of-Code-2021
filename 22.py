@@ -17,6 +17,8 @@ def difference(cube1, cube2):
     int = intersection(cube1, cube2)
     if not int:
         return [cube1]
+
+    # If the cube was intersected, generate the 6 resultant subcubes
     new_cubes = []
     new_cubes.append((cube1[0], cube1[1], (cube1[2][0], int[2][0] - 1)))
     new_cubes.append((cube1[0], cube1[1], (int[2][1] + 1, cube1[2][1])))
